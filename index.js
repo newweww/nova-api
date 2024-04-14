@@ -34,6 +34,16 @@ app.get('/api/data', (req, res) => {
         });
 });
 
+app.delete('/api/questions/:_id', async (req, res) => {
+    try {
+      const _id = req.params._id;
+      await QuestionModel.findByIdAndDelete(_id);
+      res.status(200).json({ message: 'Question deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
 // Start the server
 const port = 3001;
 app.listen(port, () => {
