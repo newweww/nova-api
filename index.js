@@ -4,7 +4,11 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  }))
+  
 
 mongoose.connect('mongodb+srv://api:gWbUnYOWrqhH4k3B@discord-bot-yt.x47ufxi.mongodb.net/?retryWrites=true&w=majority&appName=discord-bot-yt', {
     useNewUrlParser: true,
@@ -17,10 +21,12 @@ mongoose.connect('mongodb+srv://api:gWbUnYOWrqhH4k3B@discord-bot-yt.x47ufxi.mong
         console.error('Error connecting to MongoDB:', error);
     });
 
-// Define the Question model
 const Question = mongoose.model('Question', {
-    questionText: String,
-    answer: String,
+    guildId: String,
+    userId: String,
+    userName: String,
+    question: String,
+    time: String,
 });
 
 app.get('/api/data', (req, res) => {
@@ -37,7 +43,7 @@ app.get('/api/data', (req, res) => {
 app.delete('/api/questions/:_id', async (req, res) => {
     try {
       const _id = req.params._id;
-      await QuestionModel.findByIdAndDelete(_id);
+      await Question.findByIdAndDelete(_id);
       res.status(200).json({ message: 'Question deleted successfully' });
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
